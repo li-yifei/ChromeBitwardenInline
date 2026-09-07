@@ -1,4 +1,4 @@
-package org.lyf.chromebitwardeninline;
+package org.lyf.chromeautofillbridge;
 
 import android.app.Activity;
 import android.view.View;
@@ -24,7 +24,7 @@ import io.github.libxposed.api.XposedModule;
 /** Experimental restoration of the framework compatibility bridge inside Chrome. */
 public final class ModuleMain extends XposedModule {
     private static final String CHROME = "com.android.chrome";
-    private static final String TAG = "ChromeBwBridge";
+    private static final String TAG = "ChromeAutofillBridge";
     private boolean mainProcess;
     private volatile boolean bridgeActive;
     private boolean installed;
@@ -161,8 +161,8 @@ public final class ModuleMain extends XposedModule {
         if (activity.isFinishing() || activity.isDestroyed()) return;
         try {
             String service = Settings.Secure.getString(activity.getContentResolver(), "autofill_service");
-            if (service == null || !service.startsWith("com.x8bit.bitwarden/")) {
-                log(Log.INFO, TAG, "Select Bitwarden as the Android autofill service");
+            if (!isThirdPartyAutofillService(service)) {
+                log(Log.INFO, TAG, "Select a third-party Android autofill service");
                 return;
             }
             Uri state = Uri.parse("content://" + CHROME
@@ -199,5 +199,17 @@ public final class ModuleMain extends XposedModule {
         } catch (Throwable error) {
             log(Log.ERROR, TAG, "Bridge activation failed", error);
         }
+    }
+
+    private static boolean isThirdPartyAutofillService(String service) {
+        if (service == null || service.isBlank()) return false;
+        int slash = service.indexOf('/');
+        String packageName = slash > 0 ? service.substring(0, slash) : service;
+        if (packageName.isBlank()) return false;
+        // Google Password Manager stays enabled in Chrome; this bridge is for the
+        // separately selected Android provider (Bitwarden, 1Password, and others).
+        return !packageName.equals("com.google.android.gms")
+                && !packageName.equals("com.google.android.googlequicksearchbox")
+                && !packageName.equals("android");
     }
 }

@@ -15,7 +15,7 @@ if [[ ! -f "$API" ]]; then
   curl -fsSL https://repo.maven.apache.org/maven2/io/github/libxposed/api/101.0.0/api-101.0.0.aar -o "$API"
 fi
 unzip -p "$API" classes.jar > "$BUILD/deps/libxposed.jar"
-javac --release 17 -cp "$ANDROID_JAR:$BUILD/deps/libxposed.jar" -d "$BUILD/classes" src/org/lyf/chromebitwardeninline/ModuleMain.java
+javac --release 17 -cp "$ANDROID_JAR:$BUILD/deps/libxposed.jar" -d "$BUILD/classes" src/org/lyf/chromeautofillbridge/ModuleMain.java
 jar cf "$BUILD/classes.jar" -C "$BUILD/classes" .
 "$BT/d8" --min-api 30 --lib "$ANDROID_JAR" --classpath "$BUILD/deps/libxposed.jar" --output "$BUILD/dex" "$BUILD/classes.jar"
 "$BT/aapt2" link -I "$ANDROID_JAR" --manifest AndroidManifest.xml -o "$BUILD/unsigned.apk"

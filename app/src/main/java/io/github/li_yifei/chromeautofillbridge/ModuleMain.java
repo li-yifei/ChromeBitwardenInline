@@ -1,4 +1,4 @@
-package org.lyf.chromeautofillbridge;
+package io.github.li_yifei.chromeautofillbridge;
 
 import android.app.Activity;
 import android.view.View;
@@ -38,6 +38,9 @@ public final class ModuleMain extends XposedModule {
         mainProcess = CHROME.equals(param.getProcessName());
     }
 
+    // These hooks intentionally use hidden APIs exposed by the Xposed host.
+    // API lookup failures are caught and reported before activating the bridge.
+    @android.annotation.SuppressLint("SoonBlockedPrivateApi")
     @Override public void onPackageLoaded(PackageLoadedParam param) {
         if (!mainProcess || installed || !CHROME.equals(param.getPackageName())) return;
         try {
@@ -157,6 +160,9 @@ public final class ModuleMain extends XposedModule {
         });
     }
 
+    // Runs inside the Xposed host with framework-provided hidden API access.
+    // Missing or changed APIs are caught below and leave the bridge inactive.
+    @android.annotation.SuppressLint("BlockedPrivateApi")
     private void activate(Activity activity) {
         if (activity.isFinishing() || activity.isDestroyed()) return;
         try {

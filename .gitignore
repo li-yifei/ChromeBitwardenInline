@@ -5,3 +5,7 @@
 work/
 build/
 .DS_Store
+.gradle/
+.idea/
+local.properties
+*.iml

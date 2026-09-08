@@ -24,10 +24,14 @@
 
 ## 尚待验证
 
-- 1Password 和其他第三方 AutofillService 的 inline 候选与点选填入。
+- 其他第三方 AutofillService 的 inline 候选与点选填入。
 - Google 信用卡完整填入、第三方 TOTP，以及 Google/第三方两家的 passkey 完整登录。
 - 所有重定向/同源换页时序、无痕、多 Activity、其他版本的回归。
 
 原始诊断代码已移除；统计值与 UI 的域名标题是本记录的证据。跨来源 iframe 已采取排除策略；同源 iframe 暂时也被排除。
 
 测试时开启的保持亮屏设置已恢复为原值 0；临时 ADB DevTools 转发已移除。
+
+## 用户回归反馈 — v0.3.0
+
+用户确认工作资料（work profile）中的 1Password 可用。该反馈覆盖用户实际测试的工作资料环境；1Password 的具体版本和逐项流程未记录，passkey、信用卡与 TOTP 仍按上文列为待验证。
